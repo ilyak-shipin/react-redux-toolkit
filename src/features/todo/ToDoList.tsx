@@ -1,4 +1,4 @@
-import {useAppSelector} from "./hooks";
+import {useAppSelector} from "../../hooks";
 import {List, ListItem} from "@mui/material";
 
 export default function ToDoList() {

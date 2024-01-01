@@ -1,6 +1,6 @@
-import {useAppSelector} from "./hooks";
+import {useAppSelector} from "../../hooks";
 import {Typography} from "@mui/material";
-import {toDoCount} from "./features/todo/todoSlice";
+import {toDoCount} from "./todoSlice";
 
 export default function TotalCount() {
     const count = useAppSelector(toDoCount);

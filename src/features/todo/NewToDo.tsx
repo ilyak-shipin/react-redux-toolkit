@@ -1,6 +1,6 @@
 import {Field, Form, Formik} from "formik";
-import {useAppDispatch} from "./hooks";
-import {addToDo} from "./features/todo/todoSlice";
+import {useAppDispatch} from "../../hooks";
+import {addToDo} from "./todoSlice";
 
 export default function NewToDo() {
     const dispatch = useAppDispatch();

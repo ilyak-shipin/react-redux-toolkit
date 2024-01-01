@@ -1,8 +1,8 @@
 import {Typography} from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
-import TotalCount from "./TotalCount";
-import NewToDo from "./NewToDo";
-import ToDoList from "./ToDoList";
+import TotalCount from "./features/todo/TotalCount";
+import NewToDo from "./features/todo/NewToDo";
+import ToDoList from "./features/todo/ToDoList";
 
 export default function App() {
     return (
