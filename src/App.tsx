@@ -1,33 +1,26 @@
-import { RootState } from "./store";
-import { useAppSelector, useAppDispatch } from "./hooks";
-import { increment, incrementByAmount } from "./features/counter/counterSlice";
+import {useAppDispatch, useAppSelector} from "./hooks";
+import {Button, Typography} from "@mui/material";
+import Grid2 from "@mui/material/Unstable_Grid2";
+import TotalCount from "./TotalCount";
+import {addToDo, toDoCount} from "./features/todo/todoSlice";
+import NewToDo from "./NewToDo";
+import ToDoList from "./ToDoList";
 
 export default function App() {
-  const count = useAppSelector((state: RootState) => state.counter.value);
-  const dispatch = useAppDispatch();
+    return (
+        <Grid2 container>
+            <Grid2 xs={8}>
+                <Typography component="h1" variant="h5">
+                    To Do App
+                </Typography>
+                <ToDoList />
+                <NewToDo />
+            </Grid2>
+            <Grid2 xs={4}>
+                <TotalCount/>
+            </Grid2>
+        </Grid2>
 
-  return (
-      <div className="App">
-        <h1>Redux toolkit example</h1>
-        <h2>current count is: {count}</h2>
-        <div>
-          <button
-              onClick={() => {
-                dispatch(increment());
-              }}
-          >
-            Inc
-          </button>
-        </div>
-        <div>
-          <button
-              onClick={() => {
-                dispatch(incrementByAmount(3));
-              }}
-          >
-            Inc by 3
-          </button>
-        </div>
-      </div>
-  );
+
+    );
 }
