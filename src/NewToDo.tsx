@@ -7,7 +7,7 @@ export default function NewToDo() {
 
     return <Formik
         initialValues={{text: ""}}
-        onSubmit={({text}, { resetForm }) => {
+        onSubmit={({text}, {resetForm}) => {
             if (text) {
                 dispatch(addToDo(text))
                 resetForm();

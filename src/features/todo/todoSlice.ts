@@ -1,7 +1,7 @@
 import type {PayloadAction} from "@reduxjs/toolkit";
 import {createSlice} from "@reduxjs/toolkit";
 import type {RootState} from "../../store";
-import {v4 as uuidv4} from 'uuid';
+import {v4 as uuidV4} from 'uuid';
 
 interface ToDoTask {
     id: string,
@@ -29,7 +29,7 @@ export const toDoSlice = createSlice({
             state.tasks = [
                 ...state.tasks,
                 {
-                    id: uuidv4(),
+                    id: uuidV4(),
                     text: action.payload
                 }
             ];
