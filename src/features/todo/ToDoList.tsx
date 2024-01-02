@@ -1,10 +1,14 @@
 import {useAppSelector} from "../../hooks";
-import {List, ListItem} from "@mui/material";
+import {List} from "@mui/material";
+import ToDoItem from "./ToDoItem";
 
 export default function ToDoList() {
     const list = useAppSelector(state => state.toDo.tasks);
 
     return <List>
-        {list.map(task => <ListItem key={task.id}>{task.text}</ListItem>)}
-    </List>
+        {list.map(task => {
+            return <ToDoItem key={task.id} id={task.id} text={task.text} deleting={task.deleting}/>
+        })}
+    </List>;
+
 }
