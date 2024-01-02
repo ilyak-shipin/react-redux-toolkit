@@ -12,10 +12,11 @@ interface ToDoTask {
 // Define a type for the slice state
 interface ToDoState {
     state: "idle" | "loading" | "error" | "done"
-    tasks: ToDoTask[],
-    writing: boolean,
+    tasks: ToDoTask[]
+    writing: boolean
     createError?: string
     fetchError?: string
+    deleteError?: string
 }
 
 // Define the initial state using that type
@@ -48,7 +49,11 @@ export const fetchToDos = createAsyncThunk(
             method: "GET",
         })
 
-        const objects: Record<string, { text: string }> = await response.json();
+        const objects: Record<string, { text: string }> | null = await response.json();
+
+        if (objects === null) {
+            return [];
+        }
 
         return Array.from(Object.keys(objects)).map((key) => {
             return {
@@ -60,6 +65,25 @@ export const fetchToDos = createAsyncThunk(
     }
 )
 
+export const deleteToDo = createAsyncThunk(
+    'todo/deleteToDo',
+    async (taskId: string) => {
+        await fetch(RealtimeDBUrl + taskId + ".json", {
+            method: "DELETE",
+        })
+    }
+)
+
+function setDeleting(tasks: ToDoTask[], taskId: string, deleting: boolean): ToDoTask[] {
+    return tasks.map((task) => {
+        if (task.id === taskId) {
+            return {...task, deleting};
+        } else {
+            return task;
+        }
+    })
+}
+
 
 export const toDoSlice = createSlice({
     name: "todo",
@@ -70,6 +94,12 @@ export const toDoSlice = createSlice({
             return {
                 ...state,
                 createError: undefined
+            }
+        },
+        dismissDeleteError: (state) => {
+            return {
+                ...state,
+                deleteError: undefined
             }
         }
     },
@@ -97,6 +127,7 @@ export const toDoSlice = createSlice({
         }).addCase(fetchToDos.pending, (state) => {
             return {
                 ...state,
+                fetchError: undefined,
                 state: "loading"
             }
         }).addCase(fetchToDos.fulfilled, (state, action) => {
@@ -111,12 +142,28 @@ export const toDoSlice = createSlice({
                 state: "error",
                 fetchError: action.error.message
             };
+        }).addCase(deleteToDo.pending, (state, action) => {
+            return {
+                ...state,
+                tasks: setDeleting(state.tasks, action.meta.arg, true)
+            }
+        }).addCase(deleteToDo.fulfilled, (state, action) => {
+            return {
+                ...state,
+                tasks: state.tasks.filter((task) => task.id !== action.meta.arg)
+            }
+        }).addCase(deleteToDo.rejected, (state, action) => {
+            return {
+                ...state,
+                tasks: setDeleting(state.tasks, action.meta.arg, false),
+                deleteError: action.error.message
+            }
         })
     },
 
 });
 
-export const {dismissCreateError} = toDoSlice.actions;
+export const {dismissCreateError, dismissDeleteError} = toDoSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const toDoCount = (state: RootState) => state.toDo.tasks.length;
@@ -125,6 +172,7 @@ export const isWritingSelector = (state: RootState) => state.toDo.writing;
 
 export const createErrorSelector = (state: RootState) => state.toDo.createError;
 export const fetchErrorSelector = (state: RootState) => state.toDo.fetchError;
+export const deleteErrorSelector = (state: RootState) => state.toDo.deleteError;
 
 export const stateSelector = (state: RootState) => state.toDo.state;
 
